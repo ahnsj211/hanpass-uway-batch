@@ -1,0 +1,56 @@
+### Default Setting
+server:
+  port: 9999
+
+spring:
+  config:
+    additional-location: classpath:properties/
+
+# Logging
+logging:
+  level:
+    org.hibernate.SQL: debug
+
+# xe
+hanpass:
+  xe.account:
+    id: hanpassco.,ltd.422150019
+    api.key: nc0f7m12bf8r3ugkr72gt120iv
+  convert.url: https://xecdapi.xe.com/v1/convert_from.json
+
+---
+### local ###
+spring:
+  profiles: local
+
+#korea invest
+hanpass:
+  ht.rate.url: http://192.168.7.39:8080/remittance/exchange-rates
+  api.save.ht-rate.url: http://localhost:8888/exchange-rate/ht
+
+---
+### develop ###
+spring:
+  profiles: dev
+
+#korea invest
+hanpass:
+  ht.rate.url: http://192.168.7.39:8080/remittance/exchange-rates
+  api.save.ht-rate.url: http://192.168.77.117:8888/exchange-rate/ht
+
+---
+### production ###
+server:
+  ssl:
+    enabled: true
+    key-store: /home/tomcat/ssl/hanpass_2019_2021.keystore
+    key-store-password: hanpassroot2017!
+    key-store-type: jks
+    key-alias: tuition-noti.hanpass.com
+spring:
+  profiles: prd
+
+#korea invest
+hanpass:
+  ht.rate.url: http://192.168.7.41:8080/remittance/exchange-rates
+  api.save.ht-rate.url: https://tuition-api.hanpass.com/exchange-rate/ht

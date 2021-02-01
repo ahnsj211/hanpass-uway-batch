@@ -5,6 +5,19 @@ server:
 spring:
   config:
     additional-location: classpath:properties/
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    properties:
+      hibernate:
+        format_sql: true
+        type: debug
+        default_batch_fetch_size: 100
+    open-in-view: false
+    main:
+      allow-bean-definition-overriding: true
 
 # Logging
 logging:
@@ -13,6 +26,7 @@ logging:
 
 # xe
 hanpass:
+  db.encrypt.key: hanpass_uway_payment123!
   xe.account:
     id: hanpassco.,ltd.422150019
     api.key: nc0f7m12bf8r3ugkr72gt120iv
@@ -23,6 +37,14 @@ hanpass:
 spring:
   profiles: local
 
+# datasource
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://192.168.7.214:3306/uway-test?autoReconnect=true&charaterEncoding=utf-8
+    username: root
+    password: Gksvotm12#$
+    dbcp2:
+      validation-query: select 1
 #korea invest
 hanpass:
   ht.rate.url: http://192.168.7.39:8080/remittance/exchange-rates
@@ -32,6 +54,15 @@ hanpass:
 ### develop ###
 spring:
   profiles: dev
+
+# datasource
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://192.168.7.214:3306/uway?autoReconnect=true&charaterEncoding=utf-8
+    username: root
+    password: Gksvotm12#$
+    dbcp2:
+      validation-query: select 1
 
 #korea invest
 hanpass:
@@ -49,6 +80,15 @@ server:
     key-alias: tuition-noti.hanpass.com
 spring:
   profiles: prd
+
+# datasource
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://10.23.130.200:3306/uway?autoReconnect=true&charaterEncoding=utf-8
+    username: root
+    password: hanpasspg2020!@#
+    dbcp2:
+      validation-query: select 1
 
 #korea invest
 hanpass:

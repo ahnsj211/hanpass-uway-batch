@@ -17,11 +17,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Getter
 public enum PgCompanyType {
-    QUEENBEE(2),
-    INSTAMO(1),
-    LIAN_LIAN_PAY(1),
-    INNOPAY(1),
-    TRANGLO(1);
+    QUEENBEE(2, new BigDecimal(0.004)),
+    INSTAMO(1, new BigDecimal(0.004)),
+    LIAN_LIAN_PAY(1, new BigDecimal(0.005)),
+    INNOPAY(1, new BigDecimal(0.004)),
+    TRANGLO(1, new BigDecimal(0.004));
 
     private long settlementTerm;
+    private BigDecimal pgFeeRate;
 }

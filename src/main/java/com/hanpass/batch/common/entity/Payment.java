@@ -76,6 +76,11 @@ public class Payment implements Serializable {
     @Enumerated(STRING)
     private PaymentDetailStatus paymentDetailStatus;
 
+    // 정산 상태
+    @Column(length = 30, nullable = false)
+    @Enumerated(STRING)
+    private SettlementStatus settlementStatus;
+
     // 파트너의 결제상태 콜백 url
     @Column(length = 300, nullable = false)
     private String paymentStatusCallbackUrl;
@@ -111,13 +116,21 @@ public class Payment implements Serializable {
     @Column(nullable = false)
     private LocalDateTime paymentExpiredDate;
 
-    // 결제완료일
+    // 결제 완료일
     @Column
-    private LocalDateTime completeDate;
+    private LocalDateTime paymentCompleteDate;
+
+    // pg사 정산 완료일
+    @Column
+    private LocalDateTime pgSettlementCompleteDate;
+
+    // 정산 완료일
+    @Column
+    private LocalDateTime settlementCompleteDate;
 
     // pg사 정산, payment(1) : pgSettlementFx(1)
     @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "pg_settlement_fx_seq")
+    @JoinColumn(name = "llp_fx_seq")
     private PgSettlementFx pgSettlementFx;
 
     // 약관동의 정보
@@ -135,5 +148,4 @@ public class Payment implements Serializable {
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime regDate;
-
 }

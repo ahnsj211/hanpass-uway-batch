@@ -7,12 +7,12 @@ package com.hanpass.batch.common.type;
  * Description ::
  */
 public enum PgCompanySettlementStatus {
-    // 정산 데이터 생성 (배치에서 pg사 정산데이터 생성)
-    CREATION,
+    // 정산대기 (배치에서 pg사 정산데이터 생성 후 관리자 검증 대기)
+    READY,
 
-    // 정산 완료 (Operator가 정산데이터 확인 후 완료 처리)
-    COMPLETE,
+    // 검증완료 (관리자가 정산데이터 검증 완료)
+    ADMIN_VERIFIED,
 
-    // 정산 제외 (Operator가 정산데이터 확인 후 제외 처리)
-    EXCLUDE;
+    // 정산완료 (PG사에서 한패스 모계좌에 입금 후 관리자가 정산완료 처리)
+    COMPLETE;
 }

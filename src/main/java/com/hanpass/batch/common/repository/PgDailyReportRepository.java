@@ -2,6 +2,7 @@ package com.hanpass.batch.common.repository;
 
 
 import com.hanpass.batch.common.entity.PgDailyReport;
+import com.hanpass.batch.common.type.PgCompanyType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -18,7 +19,9 @@ public interface PgDailyReportRepository extends JpaRepository<PgDailyReport, Lo
     /**
      * find PgDailyReport By ReportDate
      * @param reportDate
+     * @param pgCompanyType
      * @return
      */
-    Optional<PgDailyReport> findByReportDate(LocalDate reportDate);
+    Optional<PgDailyReport> findByReportDateAndPgCompanyType(
+            LocalDate reportDate, PgCompanyType pgCompanyType);
 }

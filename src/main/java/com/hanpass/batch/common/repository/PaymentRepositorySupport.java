@@ -45,7 +45,7 @@ public class PaymentRepositorySupport extends QuerydslRepositorySupport {
                 .innerJoin(estimate).on(payment.estimate.eq(estimate))
                 .where(estimate.pgCompanyType.eq(pgCompanyType),
                         payment.paymentStatus.eq(paymentStatus),
-                        payment.completeDate.between(startDate, endDate)
+                        payment.paymentCompleteDate.between(startDate, endDate)
                 ).fetch();
     }
 

@@ -1,5 +1,6 @@
 package com.hanpass.batch.common.entity;
 
+import com.hanpass.batch.common.type.CurrencyCode;
 import com.hanpass.batch.common.type.PgCompanyType;
 import com.hanpass.batch.common.type.PgDailyReportDataType;
 import lombok.*;
@@ -33,7 +34,7 @@ import static javax.persistence.EnumType.STRING;
 @DynamicUpdate
 @Table(name="pg_daily_report", indexes = {
         @Index(name = "pg_daily_report_idx1", columnList = "pgCompanyType, reportDate"),
-        @Index(name = "pg_daily_report_idx2", columnList = "pgReportId")
+        @Index(name = "pg_daily_report_idx2", columnList = "pgReportId", unique = true)
 })
 public class PgDailyReport {
 
@@ -68,6 +69,11 @@ public class PgDailyReport {
     @Column(nullable = false)
     private int totalCount;
 
+    // 레포트 데이터 전체 금액 통화코드
+    @Column(length = 30, nullable = false)
+    @Enumerated(value = STRING)
+    private CurrencyCode totalAmountCurrencyCode;
+
     // 레포트 데이터 전체 금액
     @Column(precision = 18, scale = 8, nullable = false)
     private BigDecimal totalAmount;
@@ -80,6 +86,5 @@ public class PgDailyReport {
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime regDate;
-
 
 }

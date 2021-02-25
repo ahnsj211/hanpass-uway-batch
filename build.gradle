@@ -33,6 +33,8 @@ dependencies {
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+    compile group: 'com.jcraft', name: 'jsch', version: '0.1.55'
+    compile group: 'com.opencsv', name: 'opencsv', version: '5.3'
 
 
 

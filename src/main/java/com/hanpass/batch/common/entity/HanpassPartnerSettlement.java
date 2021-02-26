@@ -2,6 +2,7 @@ package com.hanpass.batch.common.entity;
 
 import com.hanpass.batch.common.type.CountryCode;
 import com.hanpass.batch.common.type.PartnerMerchantType;
+import com.hanpass.batch.common.type.SchoolCode;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
@@ -54,7 +55,8 @@ public class HanpassPartnerSettlement {
 
     // 청구기관
     @Column(length = 50, nullable = false)
-    private String requestedInstitution;
+    @Enumerated(STRING)
+    private SchoolCode requestedInstitution;
 
     // 청구유형
     @Column(length = 30, nullable = false)

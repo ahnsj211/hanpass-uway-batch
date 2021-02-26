@@ -108,7 +108,7 @@ public class PartnerSettlementBatchService {
                         return HanpassPartnerSettlement.builder()
                                 .paymentId(payment.get().getPaymentId())
                                 .partnerTrxId(payment.get().getPartnerTrxId())
-                                .requestedInstitution(payment.get().getStudent().getSchoolName())
+                                .requestedInstitution(payment.get().getStudent().getSchoolCode())
                                 .partnerMerchantType(payment.get().getPartnerMerchantType())
                                 .paymentCountryCode(estimate.getCurrency().getCountry().getCountryCode())
                                 .partnerChargedKrwAmount(partnerChargedKrwAmount)

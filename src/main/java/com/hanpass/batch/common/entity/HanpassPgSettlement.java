@@ -56,9 +56,10 @@ public class HanpassPgSettlement {
     @Column(nullable = true)
     private LocalDateTime paymentCompleteDate;
 
-    // 청구기관(학교명)
-    @Column(length = 50, nullable = true)
-    private String schoolName;
+    // 청구기관
+    @Column(length = 50, nullable = false)
+    @Enumerated(STRING)
+    private SchoolCode requestedInstitution;
 
     // 청구항목(파트너 상품 ID)
     @Column(length = 30, nullable = true)
@@ -170,6 +171,14 @@ public class HanpassPgSettlement {
     @CreationTimestamp
     private LocalDateTime regDate;
 
+    //pg 정산금 입글일
+    @Column
+    private LocalDate settlementDepositDate;
+
+    //정산 입금확인자
+    @Column(length = 50)
+    private String depositConfirmId;
+
     /**
      * create HanpassPgSettlement (llp)
      * @param payment
@@ -191,7 +200,7 @@ public class HanpassPgSettlement {
         return HanpassPgSettlement.builder()
                 .paymentRequestDate(payment.getRegDate())
                 .paymentCompleteDate(payment.getPaymentCompleteDate())
-                .schoolName(student.getSchoolName())
+                .requestedInstitution(student.getSchoolCode())
                 .partnerMerchantType(payment.getPartnerMerchantType())
                 .paymentStatus(payment.getPaymentStatus())
                 .depositStatus(depositAccount.getDepositStatus())
@@ -239,7 +248,7 @@ public class HanpassPgSettlement {
         return HanpassPgSettlement.builder()
                 .paymentRequestDate(payment.getRegDate())
                 .paymentCompleteDate(payment.getPaymentCompleteDate())
-                .schoolName(student.getSchoolName())
+                .requestedInstitution(student.getSchoolCode())
                 .partnerMerchantType(payment.getPartnerMerchantType())
                 .paymentStatus(payment.getPaymentStatus())
                 .depositStatus(depositHist.getDepositStatus())

@@ -14,7 +14,7 @@ import java.util.List;
  * Date :: 2021/01/29
  * Description ::
  */
-@ActiveProfiles("local")
+@ActiveProfiles("dev")
 @SpringBootTest
 class PgSettlementBatchServiceTest {
 

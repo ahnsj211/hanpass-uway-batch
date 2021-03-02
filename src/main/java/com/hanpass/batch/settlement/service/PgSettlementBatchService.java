@@ -226,9 +226,9 @@ public class PgSettlementBatchService {
         PgCompanyType pgCompanyType = PgCompanyType.QUEENBEE;
         CurrencyCode currencyCode = CurrencyCode.JPY;
 
-        // xe.com 11시 정산 환율 조회
+        // xe.com 11시 정산 환율 조회 (UTC 2시)
         LocalDate today = LocalDate.now();
-        LocalTime settlementRateTime = LocalTime.of(11, 0, 0);
+        LocalTime settlementRateTime = LocalTime.of(2, 0, 0);
         XeExchangeRate settlementRateInfo =
                 xeExchangeRateRepository.findByToCurrencyCodeAndTimestamp(
                         currencyCode,
@@ -299,10 +299,13 @@ public class PgSettlementBatchService {
                             paymentRepository.findById(paymentId);
                     BigDecimal estimateLocalAmount =
                             payment.get().getEstimate().getLocalPaymentAmount();
+
+                    //TODO :: 결제테이블의 정산상태 변경시점 백오피스 입금확인 이후 ?
                     if (totalSettlementLocalAmount.compareTo(estimateLocalAmount) == 0) {
                         payment.get().setSettlementStatus(SettlementStatus.COMPLETE_PG_SETTLEMENT);
                         payment.get().setPgSettlementCompleteDate(LocalDateTime.now());
                     }
+
                 } else {
                     // Queenbee Daily Report 와 한패스 정산 DB의 금액이 일치 하지 않는 경우
                     savedHanpassPgSettlement.get().updateIncorrectAmountSettlement(queenbeeLocalAmount);

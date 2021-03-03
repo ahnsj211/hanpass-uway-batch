@@ -1,7 +1,6 @@
 package com.hanpass.batch.common.entity;
 
 import com.hanpass.batch.common.converter.CipherConverter;
-import com.hanpass.batch.common.type.SchoolCode;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -10,7 +9,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
 /**
@@ -46,9 +44,8 @@ public class Student implements Serializable {
     private VirtualAccount virtualAccount;
 
     // 학교코드
-    @Enumerated(STRING)
     @Column(length = 50, nullable = false)
-    private SchoolCode schoolCode;
+    private String schoolCode;
 
     // 학교명
     @Column(length = 50, nullable = false)

@@ -13,6 +13,7 @@ import java.util.Arrays;
 **/
 @AllArgsConstructor
 @Getter
+@Deprecated
 public enum SchoolCode {
 
     A001("A001", "Korea University", "고려대학교"),

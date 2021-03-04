@@ -18,6 +18,9 @@ spring:
     open-in-view: false
     main:
       allow-bean-definition-overriding: true
+  datasource:
+    hikari:
+      max-lifetime: 58000
 
 # Logging
 logging:

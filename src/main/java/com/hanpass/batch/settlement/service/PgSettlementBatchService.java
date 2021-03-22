@@ -66,9 +66,9 @@ public class PgSettlementBatchService {
     @Transactional(rollbackFor = Exception.class)
     public void saveLlpReconciliationFile() {
         try {
-            // todo : settlementDate localdate - 1 로 수정 필요
+            LocalDate today = LocalDate.now();
             String settlementDate = DateTimeFormatter.ofPattern("yyyyMMdd")
-                    .format(LocalDate.of(2020, 12, 15));
+                    .format(LocalDate.now().minusDays(1L));
             UriComponentsBuilder uriBuilder = UriComponentsBuilder
                     .fromHttpUrl(llpReconciliationFileUrl)
                     .path(settlementDate);
@@ -81,17 +81,18 @@ public class PgSettlementBatchService {
                     restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, ByteArrayResource.class);
             String saveFileName = String.format("llp_reconciliation_%s.csv", settlementDate);
             File reconciliationFile = new File(llpReconciliationSavePath, saveFileName);
+            //File reconciliationFile = new File("/Users/hanpass/Documents/UWAY/lianlian", saveFileName);
             if (!reconciliationFile.exists()) {
                 reconciliationFile.getParentFile().mkdirs();
             }
             // save reconciliation file
             FileUtils.copyInputStreamToFile(response.getBody().getInputStream(), reconciliationFile);
-            // parse reconciliation file todo : [llp]아래 하드코딩된 파일 경로 삭제 및 reconciliation 파일 요청 주석 해제 필요
-//            List<LlpDailyReport> llpDailyReports =
-//                    LlpDailyReport.convertLlpReconciliationFileToLlpDailyReport(reconciliationFile.getAbsolutePath());
+            // parse reconciliation file
             List<LlpDailyReport> llpDailyReports =
-                    LlpDailyReport.convertLlpReconciliationFileToLlpDailyReport(
-                            "/Users/sjahn/hanpass/1.hanpass/3.서비스/3.학자금결제/4.lianlianpay/1.doc/1.정산/reconciliation_sample.csv");
+                    LlpDailyReport.convertLlpReconciliationFileToLlpDailyReport(reconciliationFile.getAbsolutePath());
+//            List<LlpDailyReport> llpDailyReports =
+//                    LlpDailyReport.convertLlpReconciliationFileToLlpDailyReport(
+//                            "/Users/sjahn/hanpass/1.hanpass/3.서비스/3.학자금결제/4.lianlianpay/1.doc/1.정산/reconciliation_sample.csv");
             // fx 거래만 filtering
             llpDailyReports = llpDailyReports.stream()
                     .filter(llpDailyReport -> llpDailyReport.getLlpTrxType() == LlpTrxType.FX)
@@ -104,8 +105,8 @@ public class PgSettlementBatchService {
                     .pgCompanyType(PgCompanyType.LIAN_LIAN_PAY)
                     .pgReportId(FilenameUtils.getBaseName(saveFileName))
                     .pgDailyReportDataType(PgDailyReportDataType.PAYMENT_COMPLETE)
-                    .reportBeginTime(LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.MIN)) // todo : 정산기준일 수정 필요
-                    .reportEndTime(LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.MAX))
+                    .reportBeginTime(LocalDateTime.of(today.minusDays(2), LocalTime.of(16, 0, 0)))
+                    .reportEndTime(LocalDateTime.of(today.minusDays(1), LocalTime.of(15, 59, 59)))
                     .totalCount(llpDailyReports.size())
                     .totalAmountCurrencyCode(CurrencyCode.USD)
                     .totalAmount(totalUsdAmount)
@@ -122,7 +123,7 @@ public class PgSettlementBatchService {
 
     /**
      * 한패스 - LianLianPay 정산
-     * 정산 대상 :
+     * 정산 대상 : T-2 16:00:00 ~ T-1 15:59:59
      * 정산 기준 : 결제완료(환전요청)
      * 정산 환율 : Fx(환전) 요청 시 환율
      * 배치 실행 시간 :
@@ -133,12 +134,14 @@ public class PgSettlementBatchService {
     public void llpSettlement() {
         // 한패스 llp_fx 에서 정산 대상 조회
         LocalDate today = LocalDate.now();
-        List<LlpFx> llpFxList = llpFxRepository.findByLlpFxStatusAndFxDate(
+        List<LlpFx> llpFxList = llpFxRepository.findByLlpFxStatusAndLlpModifyUtcDateBetween(
                 LlpFxStatus.COMPLETE,
-                today.minusDays(1l));
+                LocalDateTime.of(today.minusDays(2), LocalTime.of(7, 0, 0)),
+                LocalDateTime.of(today.minusDays(1), LocalTime.of(6, 59, 59))
+        );
         // 한패스가 llp 에 정산 요청한 항목을 한패스 PG 정산 테이블에 저장
-        LocalDateTime settlementBeginTime = LocalDateTime.of(today.minusDays(1), LocalTime.MIN);
-        LocalDateTime settlementEndTime = LocalDateTime.of(today.minusDays(1), LocalTime.MAX);
+        LocalDateTime settlementBeginTime = LocalDateTime.of(today.minusDays(2), LocalTime.of(16, 0, 0));
+        LocalDateTime settlementEndTime = LocalDateTime.of(today.minusDays(1), LocalTime.of(15, 59, 59));
         List<HanpassPgSettlement> hanpassPgSettlements = llpFxList.stream()
                 .map(llpFx -> {
                     // 정산 상태 저장
@@ -216,7 +219,7 @@ public class PgSettlementBatchService {
      * 한패스 - 퀸비 정산
      * 정산 대상 : T-2 15:00:00 ~ T-1 14:59:59
      * 정산 기준 : 입금통지
-     * 정산 환율 : 배치실행 시점의 xe.com 11:00:00
+     * 정산 환율 : 배치실행 시점의 xe.com 11:00:00 + 45pips
      * 배치 실행 시간 : 11:00:00 이후
      * 퀸비 -> 한패스 정산금액 입금일 : T+1
      * 타임존 : GMT+9
@@ -225,6 +228,7 @@ public class PgSettlementBatchService {
     public void queenbeeSettlement() {
         PgCompanyType pgCompanyType = PgCompanyType.QUEENBEE;
         CurrencyCode currencyCode = CurrencyCode.JPY;
+        BigDecimal jpyPips = BigDecimal.valueOf(0.45);
 
         // xe.com 11시 정산 환율 조회 (UTC 2시)
         LocalDate today = LocalDate.now();
@@ -235,6 +239,7 @@ public class PgSettlementBatchService {
                         LocalDateTime.of(today, settlementRateTime))
                         .orElseThrow(() -> new ServiceException(ServiceError.INTERNAL_SERVER_ERROR,
                                 String.format("There is no settlement exchange rate.(%s)", pgCompanyType.name())));
+        BigDecimal addPipsRate = settlementRateInfo.getRate().add(jpyPips);
         // 한패스 DB 에서 퀸비 정산데이터 조회(입금 기준 정산)
         LocalDateTime settlementBeginTime =
                 LocalDateTime.of(today.minusDays(2l), LocalTime.of(15, 0, 0));
@@ -261,7 +266,7 @@ public class PgSettlementBatchService {
                             today,
                             settlementBeginTime,
                             settlementEndTime,
-                            settlementRateInfo.getRate());
+                            addPipsRate);
                 }).collect(Collectors.toList());
         hanpassPgSettlements = hanpassPgSettlementRepository.saveAll(hanpassPgSettlements);
         // 퀸비의 daily report 와 한패스 정산데이터 비교
@@ -282,7 +287,7 @@ public class PgSettlementBatchService {
                 if (queenbeeLocalAmount.compareTo(hpsLocalAmount) == 0) {
                     // Queenbee Daily Report 와 한패스 정산 DB의 금액이 일치 하는 경우
                     savedHanpassPgSettlement = savedHanpassPgSettlement.get().updateValidSettlement(
-                            settlementRateInfo.getRate(),
+                            addPipsRate,
                             pgCompanyType.getPgFeeRate(),
                             queenbeeLocalAmount);
 
@@ -319,7 +324,7 @@ public class PgSettlementBatchService {
                         .settlementDate(today)
                         .settlementStartDate(settlementBeginTime)
                         .settlementEndDate(settlementEndTime)
-                        .usdToLocalRate(settlementRateInfo.getRate())
+                        .usdToLocalRate(addPipsRate)
                         .pgLocalAmount(queenbeeDailyReport.getDepositAmount())
                         .isInHpsReport(false)
                         .isInPgReport(true)

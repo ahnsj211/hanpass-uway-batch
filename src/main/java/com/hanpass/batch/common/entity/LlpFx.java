@@ -71,9 +71,17 @@ public class LlpFx {
     @Column(precision = 18, scale = 8)
     private BigDecimal fxUsdAmount;
 
-    // 정산일
-    @Column(nullable = false)
-    private LocalDate fxDate;
+    // 정산일 (완료콜백 수신시간)
+    @Column
+    private LocalDateTime fxDate;
+
+    // llp서버 정산요청일 (UTC+0)
+    @Column
+    private LocalDateTime llpCreateUtcDate;
+
+    // llp서버 정산완료일 (UTC+0)
+    @Column
+    private LocalDateTime llpModifyUtcDate;
 
     // 등록일
     @Column(nullable = false, updatable = false)

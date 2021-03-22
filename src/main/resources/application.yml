@@ -101,5 +101,5 @@ spring:
 hanpass:
   ht.rate.url: http://192.168.7.41:8080/remittance/exchange-rates
   api.save.ht-rate.url: https://tuition-api.hanpass.com/exchange-rate/ht
-  llp.reconciliation-file.url: http://localhost:8081/lianlianpay/download/reconciliation/
+  llp.reconciliation-file.url: https://tuition-pg.hanpass.com/lianlianpay/download/reconciliation/
   llp.reconciliation-file.save.path: /home/tomcat/file/settlement/llp/reconciliation/

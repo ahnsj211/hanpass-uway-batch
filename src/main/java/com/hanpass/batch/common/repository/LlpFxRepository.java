@@ -6,6 +6,7 @@ import com.hanpass.batch.common.type.LlpFxStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,5 +31,15 @@ public interface LlpFxRepository extends JpaRepository<LlpFx, Long> {
      * @param fxDate
      * @return
      */
-    List<LlpFx> findByLlpFxStatusAndFxDate(LlpFxStatus llpFxStatus, LocalDate fxDate);
+    List<LlpFx> findByLlpFxStatusAndFxDate(LlpFxStatus llpFxStatus, LocalDateTime fxDate);
+
+    /**
+     * ind by LlpFx by llpFxStatus and fxDate between
+     * @param llpFxStatus
+     * @param fxDate
+     * @param fxDate2
+     * @return
+     */
+    List<LlpFx> findByLlpFxStatusAndLlpModifyUtcDateBetween(LlpFxStatus llpFxStatus, LocalDateTime fxDate, LocalDateTime fxDate2);
+
 }

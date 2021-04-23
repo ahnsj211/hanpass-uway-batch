@@ -4,7 +4,7 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <!-- logging file path property -->
     <property name="LOG_DIR" value = "logs"/>
-    <property name="LOG_FILE" value = "payment-batch.log"/>
+    <property name="LOG_FILE" value = "tuition-batch.log"/>
 
     <!-- Appenders -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -21,7 +21,7 @@
         	<pattern>%d{yyyyMMdd HH:mm:ss.SSS} [%thread] %-3level %logger{5} - %msg %n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_DIR}/payment-batch-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_DIR}/tuition-batch-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy  class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>

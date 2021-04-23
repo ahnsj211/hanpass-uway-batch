@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.hanpass'
-archivesBaseName = 'payment-batch'
+archivesBaseName = 'tuition-batch'
 sourceCompatibility = '11'
 
 configurations {

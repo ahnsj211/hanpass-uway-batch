@@ -1,6 +1,6 @@
 ### Default Setting
 server:
-  port: 9999
+  port: 32883
 
 spring:
   config:
@@ -43,16 +43,16 @@ spring:
 # datasource
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://192.168.7.214:3306/uway-test?autoReconnect=true&charaterEncoding=utf-8
-    username: root
-    password: Gksvotm12#$
+    url: jdbc:mariadb://10.23.132.101:3306/hnps_pg_tuition?autoReconnect=true&charaterEncoding=utf-8
+    username: hanpass_tuition
+    password: Password12#
     dbcp2:
       validation-query: select 1
 #korea invest
 hanpass:
   ht.rate.url: http://192.168.7.39:8080/remittance/exchange-rates
-  api.save.ht-rate.url: http://localhost:8888/exchange-rate/ht
-  llp.reconciliation-file.url: http://localhost:8081/lianlianpay/download/reconciliation/
+  api.save.ht-rate.url: http://localhost:32880/exchange-rate/ht
+  llp.reconciliation-file.url: http://localhost:32889/lianlianpay/download/reconciliation/
   llp.reconciliation-file.save.path: /Users/sjahn/file/settlement/llp/reconciliation/
 
 ---
@@ -63,43 +63,64 @@ spring:
 # datasource
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://192.168.7.214:3306/uway?autoReconnect=true&charaterEncoding=utf-8
-    username: root
-    password: Gksvotm12#$
+    url: jdbc:mariadb://10.23.132.101:3306/hnps_pg_tuition?autoReconnect=true&charaterEncoding=utf-8
+    username: hanpass_tuition
+    password: Password12#
     dbcp2:
       validation-query: select 1
 
 #korea invest
 hanpass:
   ht.rate.url: http://192.168.7.39:8080/remittance/exchange-rates
-  api.save.ht-rate.url: http://192.168.77.117:8888/exchange-rate/ht
-  llp.reconciliation-file.url: http://localhost:8081/lianlianpay/download/reconciliation/
-  llp.reconciliation-file.save.path: /home/tomcat/file/settlement/llp/reconciliation/
+  api.save.ht-rate.url: http://localhost:32880/exchange-rate/ht
+  llp.reconciliation-file.url: http://localhost:32889/lianlianpay/download/reconciliation/
+  llp.reconciliation-file.save.path: /HANPASS/file/settlement/llp/reconciliation/
+
+---
+### staging ###
+spring:
+  profiles: stg
+
+  # datasource
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://10.23.132.101:3306/hnps_pg_tuition?autoReconnect=true&charaterEncoding=utf-8
+    username: hanpass_tuition
+    password: Password12#
+    dbcp2:
+      validation-query: select 1
+
+#korea invest
+hanpass:
+  ht.rate.url: http://192.168.7.39:8080/remittance/exchange-rates
+  api.save.ht-rate.url: http://localhost:32880/exchange-rate/ht
+  llp.reconciliation-file.url: http://localhost:32889/lianlianpay/download/reconciliation/
+  llp.reconciliation-file.save.path: /HANPASS/file/settlement/llp/reconciliation/
 
 ---
 ### production ###
-server:
-  ssl:
-    enabled: true
-    key-store: /home/tomcat/ssl/hanpass_2019_2021.keystore
-    key-store-password: hanpassroot2017!
-    key-store-type: jks
-    key-alias: tuition-noti.hanpass.com
+#server:
+#  ssl:
+#    enabled: true
+#    key-store: /home/tomcat/ssl/hanpass_2019_2021.keystore
+#    key-store-password: hanpassroot2017!
+#    key-store-type: jks
+#    key-alias: tuition-noti.hanpass.com
 spring:
   profiles: prd
 
 # datasource
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://10.23.130.200:3306/uway?autoReconnect=true&charaterEncoding=utf-8
-    username: root
-    password: hanpasspg2020!@#
+    url: jdbc:mariadb://192.168.7.64:3306/hnps_pg_tuition?autoReconnect=true&charaterEncoding=utf-8
+    username: hanpass_tuition
+    password: Gksvotmpg2017!
     dbcp2:
       validation-query: select 1
 
 #korea invest
 hanpass:
-  ht.rate.url: http://192.168.7.41:8080/remittance/exchange-rates
-  api.save.ht-rate.url: https://tuition-api.hanpass.com/exchange-rate/ht
-  llp.reconciliation-file.url: https://tuition-pg.hanpass.com/lianlianpay/download/reconciliation/
-  llp.reconciliation-file.save.path: /home/tomcat/file/settlement/llp/reconciliation/
+  ht.rate.url: http://192.168.7.39:8080/remittance/exchange-rates
+  api.save.ht-rate.url: http://localhost:32880/exchange-rate/ht
+  llp.reconciliation-file.url: http://localhost:32889/lianlianpay/download/reconciliation/
+  llp.reconciliation-file.save.path: /HANPASS/file/settlement/llp/reconciliation/

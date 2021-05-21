@@ -62,7 +62,7 @@ public class PgSettlementBatchService {
      * 3. LianLianPay Reconciliation data db 저장
      * todo : [llp] LianLianPay Reconciliation batch 실행 시간 확인 필요
      */
-    @Scheduled(cron = "0 0 1 * * ?")
+    @Scheduled(cron = "0 0 1 * * *")
     @Transactional(rollbackFor = Exception.class)
     public void saveLlpReconciliationFile() {
         try {
